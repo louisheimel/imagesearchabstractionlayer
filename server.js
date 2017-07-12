@@ -27,6 +27,7 @@ app.get('/', function(req, res) {
 
 app.get('/test', function(req, res) {
   request.get(requestObjectMaker('lolcats'), function(err, data, body) {
+    const data = JSON.parse(data.body).data
     res.json(data);
   });
 });
