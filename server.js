@@ -23,7 +23,7 @@ app.get('/', function(req, res) {
 
 app.get('/test', function(req, res) {
   request.get(requestObjectMaker('lolcats'), function(err, data, body) {
-    res.send(JSON.parse(data));
+    res.json(data);
   });
 });
 
