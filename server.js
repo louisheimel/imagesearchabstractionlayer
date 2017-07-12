@@ -6,11 +6,12 @@ var MongoClient = require('mongodb').MongoClient;
 
 function requestObjectMaker(querystr) {
   const api_url = 'https://api.imgur.com/3/'
+  const clientid = '5cfe2aa5b1c8b48'
   return {
     url: api_url + querystr,
     method: 'GET',
     headers: {
-      'Authorization': 'Client-ID 6c3bb20535ca5bd'
+      'Authorization': 'Client-ID ' + clientid
     },
   }
 }
