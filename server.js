@@ -6,7 +6,7 @@ var MongoClient = require('mongodb').MongoClient;
 
 function requestObjectMaker(querystr) {
 //  const api_url = 'https://api.imgur.com/3/gallery/search?q='
-  const api_url = 'https://api.imgur.com/3/gallery/random/random/'
+  const api_url = 'https://api.imgur.com/3/gallery/search/?q='
 
 
   // const api_url = 'https://api.imgur.com/3/search?q='
