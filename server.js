@@ -5,8 +5,9 @@ var app = express();
 var MongoClient = require('mongodb').MongoClient;
 
 function requestObjectMaker(querystr) {
-  const api_url = 'https://api.imgur.com/3/gallery/search?q='
-// const api_url = 'https://api.imgur.com/3/gallery?q='
+//  const api_url = 'https://api.imgur.com/3/gallery/search?q='
+
+  const api_url = 'http://imgur.com/search?q='
   const clientid = '5cfe2aa5b1c8b48'
 
   return {
