@@ -18,13 +18,17 @@ function requestObjectMaker(querystr) {
   }
 }
 
+function parseResponse(data) {
+  return JSON.parse(data.body).data.filter(e => !e.is_album);
+}
+
 app.get('/', function(req, res) {
   res.send('hello');
 });
 
 app.get('/test', function(req, res) {
   request.get(requestObjectMaker('lolcats'), function(err, data, body) {
-    res.json(JSON.parse(data.body).data.filter(e => !e.is_album));
+    res.json(parseResponse(data));
   });
 });
 
