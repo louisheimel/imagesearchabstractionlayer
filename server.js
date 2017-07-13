@@ -6,8 +6,6 @@ var MongoClient = require('mongodb').MongoClient;
 
 function requestObjectMaker(querystr) {
   const api_url = 'https://api.imgur.com/3/gallery/search/?q='
-// some comment
-
 
   const clientid = '5cfe2aa5b1c8b48'
 
@@ -26,7 +24,7 @@ app.get('/', function(req, res) {
 
 app.get('/test', function(req, res) {
   request.get(requestObjectMaker('lolcats'), function(err, data, body) {
-    res.json(JSON.parse(data.body).data);
+    res.json(JSON.parse(data.body).data.filter(e => !e.is_album));
   });
 });
 
