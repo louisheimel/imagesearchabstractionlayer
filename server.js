@@ -39,13 +39,12 @@ app.get('/api/imagesearch/:query', function(req, res) {
     db.collection('recentSearches').save({ search: req.params.query});
     db.close();
   });
-  var offset;
   var offset = parseInt(req.query.offset);
   request.get(requestObjectMaker(req.params.query.split('?')[0]), function(err, data, body) { 
  						    if (offset) {
-						      res.end(JSON.stringify(JSON.parse(data.body).data.slice(0, offset)));
+						      res.end(parseResponse(data).slice(0, offset));
 						    } else { 
-                                                      res.end(JSON.stringify(JSON.parse(data.body).data)); 
+						      res.end(parseResponse(data))
 						    };
  						    })
 });
