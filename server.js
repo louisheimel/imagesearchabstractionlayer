@@ -2,6 +2,7 @@ var express = require('express');
 var https = require('https');
 var request = require('request');
 var app = express();
+var mongoose = require('mongoose');
 var MongoClient = require('mongodb').MongoClient,
     api_url = 'https://api.imgur.com/3/gallery/search/?q=',
     clientid = '5cfe2aa5b1c8b48';
@@ -43,20 +44,20 @@ app.get('/api/imagesearch/:query', function(req, res) {
     if (err) throw err;
   
 
-   MongoClient.connect(dbConnectUrl, function(err, db) {
-     if (err) throw err;
-       db.createCollection('recentSearches');
-       db.collection('recentSearches').save({ search: req.params.query});
-       db.close();
-     });
-     var offset = parseInt(req.query.offset);
-     request.get(requestObjectMaker(req.params.query.split('?')[0]), function(err, data, body) { 
-    						    if (offset) {
-          					      res.end(parseResponse(data).slice(0, offset));
-          					    } else { 
-          					      res.end(parseResponse(data))
-          					    };
-    						    })
+  mongoose.connect(dbConnectUrl)
+  const db = mongoose.connection
+  mongoose.on('connected', () => {
+    db.createCollection('recentSearches')
+    db.collection('recentSearches').save({ search: req.params.query })
+  }) 
+	 var offset = parseInt(req.query.offset);
+	 request.get(requestObjectMaker(req.params.query.split('?')[0]), function(err, data, body) { 
+						    if (offset) {
+						      res.end(parseResponse(data).slice(0, offset));
+						    } else { 
+						      res.end(parseResponse(data))
+						    };
+						    })
   })
 });
 
