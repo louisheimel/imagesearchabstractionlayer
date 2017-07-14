@@ -49,16 +49,8 @@ app.get('/api/imagesearch/:query', function(req, res) {
   mongoose.on('connected', () => {
     db.createCollection('recentSearches')
     db.collection('recentSearches').save({ search: req.params.query })
+    res.json(data)
   }) 
-	 var offset = parseInt(req.query.offset);
-	 request.get(requestObjectMaker(req.params.query.split('?')[0]), function(err, data, body) { 
-						    if (offset) {
-						      res.end(parseResponse(data).slice(0, offset));
-						    } else { 
-						      res.end(parseResponse(data))
-						    };
-						    })
-  })
 });
 
 app.get('/recent', function(req, res) {
