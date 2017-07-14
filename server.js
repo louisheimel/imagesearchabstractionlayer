@@ -52,7 +52,7 @@ app.get('/api/imagesearch/:query', function(req, res) {
   // }) 
 
 
-    res.json(data)
+    res.json(parseResponse(data))
 })
 });
 
