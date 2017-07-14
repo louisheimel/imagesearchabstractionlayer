@@ -53,6 +53,7 @@ app.get('/api/imagesearch/:query', function(req, res) {
 
 
     res.json(data)
+})
 });
 
 app.get('/recent', function(req, res) {
