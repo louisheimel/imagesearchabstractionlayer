@@ -57,7 +57,6 @@ app.get('/api/imagesearch/:query', function(req, res) {
           					      res.end(parseResponse(data))
           					    };
     						    })
-  res.json(parseResponse(data))
   })
 });
 
