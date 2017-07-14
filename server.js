@@ -29,7 +29,16 @@ function parseResponse(data, offset) {
   const sliceData = (data, offset) => {
     return data.slice(offset, offset + 10)
   }
-  return sliceData(JSON.parse(data.body).data.filter(e => !e.is_album), offset);
+
+  const parsedData = sliceData(JSON.parse(data.body).data.filter(e => !e.is_album), offset);
+  return parsedData.map(e => {
+    return {
+      title: e.title,
+      altText: e.description,
+      imageUrl: e.link,
+      pageUrl: 'http://imgur.com/gallery/' + e.id
+    }
+  })
 }
 
 app.use(express.static('public'))
@@ -45,12 +54,10 @@ app.get('/test', function(req, res) {
 });
 
 app.get('/api/imagesearch/:query', function(req, res) {
-  
-  const querySplit = req.params.query.split('?')
-  const query = querySplit[0],
-        offset = parseInt(req.params.offset);
+  const query = req.params.query,
+	offset = req.query.offset ? req.query.offset : 0
 
-  request.get(requestObjectMaker(req.params.query), (err, data, body) => {
+  request.get(requestObjectMaker(query), (err, data, body) => {
     if (err) throw err;
     MongoClient.connect(dbConnectUrl, (err, db) => {
       if (err) throw err;
