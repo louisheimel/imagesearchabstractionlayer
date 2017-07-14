@@ -45,7 +45,8 @@ app.get('/api/imagesearch/:query', function(req, res) {
   
     MongoClient.connect(dbConnectUrl, (err, db) => {
       if (err) throw err;
-      db.collection('recentSearches').save({data: data})
+      db.collection('recentSearches').save({query: req.params.query})
+      console.log('saved!')
     })
     res.json(parseResponse(data))
   })
