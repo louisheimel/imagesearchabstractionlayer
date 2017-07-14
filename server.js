@@ -44,12 +44,13 @@ app.get('/api/imagesearch/:query', function(req, res) {
     if (err) throw err;
   
 
-  mongoose.connect(dbConnectUrl)
-  const db = mongoose.connection
-  mongoose.on('connected', () => {
-    db.createCollection('recentSearches')
-    db.collection('recentSearches').save({ search: req.params.query })
-  }) 
+  // mongoose.connect(dbConnectUrl)
+  // const db = mongoose.connection
+  // mongoose.on('connected', () => {
+  //   db.createCollection('recentSearches')
+  //   db.collection('recentSearches').save({ search: req.params.query })
+  // }) 
+
 
     res.json(data)
 });
