@@ -47,7 +47,7 @@ app.get('/test', function(req, res) {
 app.get('/api/imagesearch/:query', function(req, res) {
   
   const querySplit = req.params.query.split('?')
-  const getQuery = (query) => {
+  const getOffset = (query) => {
     return query.split('?')[1] ? parseInt(query.split('?')[1].split('=')[1]) : 0
   }
   const query = querySplit[0],
