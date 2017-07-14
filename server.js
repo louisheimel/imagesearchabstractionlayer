@@ -49,8 +49,9 @@ app.get('/api/imagesearch/:query', function(req, res) {
   mongoose.on('connected', () => {
     db.createCollection('recentSearches')
     db.collection('recentSearches').save({ search: req.params.query })
-    res.json(data)
   }) 
+
+    res.json(data)
 });
 
 app.get('/recent', function(req, res) {
