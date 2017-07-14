@@ -29,7 +29,7 @@ function parseResponse(data, offset) {
   const sliceData = (data, offset) => {
     return data.slice(offset, offset + 10)
   }
-  return sliceData(JSON.parse(data.body).data.filter(e => !e.is_album));
+  return sliceData(JSON.parse(data.body).data.filter(e => !e.is_album), offset);
 }
 
 app.use(express.static('public'))
