@@ -14,9 +14,6 @@ const makeDbConnectUrl = () => {
 
 const dbConnectUrl = makeDbConnectUrl();
 
-
-
-
 function requestObjectMaker(querystr) {
   return {
     url: api_url + querystr,
@@ -46,26 +43,30 @@ app.get('/api/imagesearch/:query', function(req, res) {
     if (err) throw err;
     res.json(parseResponse(data))
   })
-   MongoClient.connect(dbConnectUrl, function(err, db) {
-     if (err) throw err;
-     db.createCollection('recentSearches');
-     db.collection('recentSearches').save({ search: req.params.query});
-     db.close();
-   });
-   var offset = parseInt(req.query.offset);
-   request.get(requestObjectMaker(req.params.query.split('?')[0]), function(err, data, body) { 
-  						    if (offset) {
- 						      res.end(parseResponse(data).slice(0, offset));
- 						    } else { 
- 						      res.end(parseResponse(data))
- 						    };
-  						    })
+
+   // MongoClient.connect(dbConnectUrl, function(err, db) {
+   //   if (err) throw err;
+   //     db.createCollection('recentSearches');
+   //     db.collection('recentSearches').save({ search: req.params.query});
+   //     db.close();
+   //   });
+   //   var offset = parseInt(req.query.offset);
+   //   request.get(requestObjectMaker(req.params.query.split('?')[0]), function(err, data, body) { 
+   //  						    if (offset) {
+   //        					      res.end(parseResponse(data).slice(0, offset));
+   //        					    } else { 
+   //        					      res.end(parseResponse(data))
+   //        					    };
+   //  						    })
 });
 
 app.get('/recent', function(req, res) {
   MongoClient.connect(dbConnectUrl, function(err, db) {
     if (err) throw err;
-    db.collection('recentSearches').find({}, {'search':1, _id:0}, function(err, data) { data.toArray(function(err, data) { res.end(JSON.stringify(data)); }) });
+    db.collection('recentSearches')
+      .find({}, {'search':1, _id:0}, (err, data) => {
+        data.toArray((err, data) => { res.end(JSON.stringify(data)); }) 
+      });
     db.close();
   });
 })
