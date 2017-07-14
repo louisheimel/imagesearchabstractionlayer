@@ -2,7 +2,6 @@ var express = require('express');
 var https = require('https');
 var request = require('request');
 var app = express();
-var mongoose = require('mongoose');
 var MongoClient = require('mongodb').MongoClient,
     api_url = 'https://api.imgur.com/3/gallery/search/?q=',
     clientid = '5cfe2aa5b1c8b48';
@@ -42,11 +41,9 @@ app.get('/test', function(req, res) {
 app.get('/api/imagesearch/:query', function(req, res) {
   request.get(requestObjectMaker(req.params.query), (err, data, body) => {
     if (err) throw err;
-  
     MongoClient.connect(dbConnectUrl, (err, db) => {
       if (err) throw err;
-      db.collection('recentSearches').save({query: req.params.query})
-      console.log('saved!')
+      db.collection('recentSearches').save({search: req.params.query})
     })
     res.json(parseResponse(data))
   })
