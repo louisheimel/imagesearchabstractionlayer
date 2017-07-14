@@ -48,7 +48,7 @@ app.get('/api/imagesearch/:query', function(req, res) {
   
   const querySplit = req.params.query.split('?')
   const query = querySplit[0],
-        offset = 5,
+        offset = 5;
   request.get(requestObjectMaker(req.params.query), (err, data, body) => {
     if (err) throw err;
     MongoClient.connect(dbConnectUrl, (err, db) => {
