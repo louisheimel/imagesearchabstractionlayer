@@ -60,7 +60,7 @@ app.get('/api/imagesearch/:query', function(req, res) {
 });
 
 app.get('/recent', function(req, res) {
-  ongoClient.connect(makeDbConnectUrl(), function(err, db) {
+  MongoClient.connect(makeDbConnectUrl(), function(err, db) {
     if (err) throw err;
     db.collection('recentSearches').find({}, {'search':1, _id:0}, function(err, data) { data.toArray(function(err, data) { res.end(JSON.stringify(data)); }) });
     db.close();
