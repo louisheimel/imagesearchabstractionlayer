@@ -7,7 +7,7 @@ var MongoClient = require('mongodb').MongoClient,
     clientid = '5cfe2aa5b1c8b48';
 
 const makeDbConnectUrl = () => {
-  const username = 'louisheimel1'
+  const username = 'louis12'
   const password = 'superkey1'
   return 'mongodb://' + username + ':' + password + '@ds161099.mlab.com:61099/imagesearchabstraction'
 }
