@@ -28,7 +28,8 @@ function parseResponse(data) {
   return JSON.parse(data.body).data.filter(e => !e.is_album);
 }
 
-app.use(express.static(public))
+app.use(express.static('public'))
+
 app.get('/', function(req, res) {
   res.send();
 });
