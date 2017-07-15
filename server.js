@@ -34,15 +34,15 @@ function parseResponse(data, offset) {
   const parsedData = sliceData(JSON.parse(data.body)
 				   .data
 			           .filter(e => !e.is_album), offset);
-  return parsedData
-	.map(e => {
-  	  return {
-	    title: e.title,
-	    altText: e.description,
-	    imageUrl: e.link,
-	    pageUrl: 'http://imgur.com/gallery/' + e.id
-	  }
-	})
+  return JSON.parse(data.body).data.filter(e => !e.is_album)
+				   .map(e => {
+				     return {
+				       title: e.title,
+				       altText: e.description,
+				       imageUrl: e.link,
+				       pageUrl: 'http://imgur.com/gallery/' + e.id
+				     }
+				   })
 }
 
 app.use(express.static('public'))
@@ -52,9 +52,7 @@ app.get('/', function(req, res) {
 });
 
 app.get('/test', function(req, res) {
-  request.get(requestObjectMaker('lolcats'), function(err, data, body) {
-    res.json(parseResponse(data));
-  });
+  res.redirect('/api/imagesearch/lolcats')
 });
 
 app.get('/api/imagesearch/:query', function(req, res) {
@@ -67,8 +65,7 @@ app.get('/api/imagesearch/:query', function(req, res) {
       if (err) throw err;
       db.collection('recentSearches').save({search: query})
     })
-    Promise.all(parseResponse(data, offset))
-	   .then(data => res.json(data))
+    res.json(parseResponse(data))
   })
 });
 
