@@ -5,6 +5,10 @@ var app = express();
 var MongoClient = require('mongodb').MongoClient,
     api_url = 'https://api.imgur.com/3/gallery/search/?q=',
     clientid = '5cfe2aa5b1c8b48';
+var AUTH_HEADERS = 
+    {
+      'Authorization': 'Client-ID ' + clientid
+    }
 
 const makeDbConnectUrl = () => {
   const username = 'louis12'
@@ -14,14 +18,11 @@ const makeDbConnectUrl = () => {
 
 const dbConnectUrl = makeDbConnectUrl();
 
-
 function requestObjectMaker(querystr) {
   return {
     url: api_url + querystr,
     method: 'GET',
-    headers: {
-      'Authorization': 'Client-ID ' + clientid
-    },
+    headers: AUTH_HEADERS,
   }
 }
 
@@ -30,15 +31,18 @@ function parseResponse(data, offset) {
     return data.slice(offset, offset + 10)
   }
 
-  const parsedData = sliceData(JSON.parse(data.body).data.filter(e => !e.is_album), offset);
-  return parsedData.map(e => {
-    return {
-      title: e.title,
-      altText: e.description,
-      imageUrl: e.link,
-      pageUrl: 'http://imgur.com/gallery/' + e.id
-    }
-  })
+  const parsedData = sliceData(JSON.parse(data.body)
+				   .data
+			           .filter(e => !e.is_album), offset);
+  return parsedData
+	.map(e => {
+  	  return {
+	    title: e.title,
+	    altText: e.description,
+	    imageUrl: e.link,
+	    pageUrl: 'http://imgur.com/gallery/' + e.id
+	  }
+	})
 }
 
 app.use(express.static('public'))
@@ -63,7 +67,8 @@ app.get('/api/imagesearch/:query', function(req, res) {
       if (err) throw err;
       db.collection('recentSearches').save({search: query})
     })
-    res.json(parseResponse(data, offset))
+    Promise.all(parseResponse(data, offset))
+	   .then(data => res.json(data))
   })
 });
 
