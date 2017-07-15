@@ -27,13 +27,7 @@ function requestObjectMaker(querystr) {
 }
 
 function parseResponse(data, offset) {
-  const sliceData = (data, offset) => {
-    return data.slice(offset, offset + 10)
-  }
-
-  const parsedData = sliceData(JSON.parse(data.body)
-				   .data
-			           .filter(e => !e.is_album), offset);
+  console.log('offset is: ' + offset)
   return JSON.parse(data.body).data.filter(e => !e.is_album)
 				   .map(e => {
 				     return {
@@ -42,7 +36,7 @@ function parseResponse(data, offset) {
 				       imageUrl: e.link,
 				       pageUrl: 'http://imgur.com/gallery/' + e.id
 				     }
-				   })
+				   }).slice(parseInt(offset), parseInt(offset) + 10)
 }
 
 app.use(express.static('public'))
@@ -58,6 +52,7 @@ app.get('/test', function(req, res) {
 app.get('/api/imagesearch/:query', function(req, res) {
   const query = req.params.query,
 	offset = req.query.offset ? req.query.offset : 0
+  console.log(offset)
 
   request.get(requestObjectMaker(query), (err, data, body) => {
     if (err) throw err;
@@ -65,7 +60,7 @@ app.get('/api/imagesearch/:query', function(req, res) {
       if (err) throw err;
       db.collection('recentSearches').save({search: query})
     })
-    res.json(parseResponse(data))
+    res.json(parseResponse(data, offset))
   })
 });
 
@@ -74,7 +69,8 @@ app.get('/recent', function(req, res) {
     if (err) throw err;
     db.collection('recentSearches')
       .find({}, {'search':1, _id:0}, (err, data) => {
-        data.toArray((err, data) => { res.json(data.slice(0, 10)); }) 
+	data.toArray((err, data) => { res.json(data) })
+//        data.toArray((err, data) => { res.json(data.slice(0, 10)); }) 
       });
     db.close();
   });
