@@ -64,7 +64,7 @@ app.get('/api/imagesearch/:query', function(req, res) {
   })
 });
 
-app.get('/recent', function(req, res) {
+app.get('/api/latest/imagesearch', function(req, res) {
   MongoClient.connect(dbConnectUrl, function(err, db) {
     if (err) throw err;
     db.collection('recentSearches')
