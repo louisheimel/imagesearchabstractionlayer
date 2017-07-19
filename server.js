@@ -69,8 +69,7 @@ app.get('/recent', function(req, res) {
     if (err) throw err;
     db.collection('recentSearches')
       .find({}, {'search':1, _id:0}, (err, data) => {
-	data.toArray((err, data) => { res.json(data) })
-//        data.toArray((err, data) => { res.json(data.slice(0, 10)); }) 
+	data.toArray((err, data) => { res.json(data.reverse()) })
       });
     db.close();
   });
