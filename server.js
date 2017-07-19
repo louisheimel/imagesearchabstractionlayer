@@ -52,13 +52,13 @@ app.get('/test', function(req, res) {
 app.get('/api/imagesearch/:query', function(req, res) {
   const query = req.params.query,
 	offset = req.query.offset ? req.query.offset : 0
-  console.log(offset)
 
   request.get(requestObjectMaker(query), (err, data, body) => {
     if (err) throw err;
     MongoClient.connect(dbConnectUrl, (err, db) => {
       if (err) throw err;
-      db.collection('recentSearches').save({search: query})
+      db.collection('recentSearches').save({search: query, timestamp: Date.now()})
+      console.log('search saved in database!')
     })
     res.json(parseResponse(data, offset))
   })
@@ -68,7 +68,7 @@ app.get('/recent', function(req, res) {
   MongoClient.connect(dbConnectUrl, function(err, db) {
     if (err) throw err;
     db.collection('recentSearches')
-      .find({}, {'search':1, _id:0}, (err, data) => {
+      .find({}, {'search':1, _id:0, 'timestamp': 1}, (err, data) => {
 	data.toArray((err, data) => { res.json(data.reverse()) })
       });
     db.close();
